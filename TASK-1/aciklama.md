@@ -1,4 +1,4 @@
-İsim - Soy isim 
+İsim - Soy isim: Emirhan LEVENTER
 Öğrenci No: 250542004
 
 sistemin kısa açıklaması (maks. 5-6 satır)
