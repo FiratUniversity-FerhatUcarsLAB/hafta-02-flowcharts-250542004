@@ -1,6 +1,9 @@
 Online Alışveriş Sepet Sistemi-Devamı için LLM tarafından hazırlanan pseudocode aşağıdadır:
 
 
+# E-ticaret Sepet ve Ödeme Sistemi Pseudocode
+
+```pseudo
 BASLA
 
 // 1. Kullanıcı Girişi
