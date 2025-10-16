@@ -1,0 +1,92 @@
+digraph ATM {
+    rankdir=TB;
+    node [fontname="Arial", fontsize=10];
+
+    // --- Düğüm tipleri ---
+    start [shape=ellipse, label="BAŞLA"];
+    init [shape=box, label="bakiye = 5000\nlimit = 2000\ngunluk_cekilen = 0\npin = 1234\nhak = 3"];
+    
+    pin_prompt [shape=parallelogram, label="PIN giriniz"];
+    check_pin [shape=diamond, label="PIN doğru mu?"];
+    pin_ok [shape=parallelogram, label="PIN doğru"];
+    
+    wrong_pin [shape=parallelogram, label="PIN yanlış\nhak = hak - 1"];
+    check_hak [shape=diamond, label="hak > 0 mı?"];
+    blocked [shape=ellipse, label="Kart bloke edildi\nBİTİR"];
+    
+    menu [shape=parallelogram, label="Menü:\n1) Para Çek\n2) Bakiye Gör\n3) Çıkış"];
+    choice [shape=diamond, label="Seçim?"];
+    
+    // Para çekme süreci
+    enter_amount [shape=parallelogram, label="Çekilecek tutarı gir"];
+    check_positive [shape=diamond, label="Tutar > 0 mu?"];
+    invalid_amount [shape=parallelogram, label="Geçersiz tutar"];
+    
+    check_multiple [shape=diamond, label="20'nin katı mı?"];
+    invalid_multiple [shape=parallelogram, label="20 TL katı olmalı"];
+    
+    check_limit [shape=diamond, label="(gunluk_cekilen + tutar) > limit ?"];
+    limit_exceeded [shape=parallelogram, label="Günlük limit aşıldı"];
+    
+    check_balance [shape=diamond, label="Bakiye yeterli mi?"];
+    insufficient [shape=parallelogram, label="Yetersiz bakiye"];
+    
+    confirm [shape=diamond, label="Onaylıyor musunuz? (E/H)"];
+    withdraw [shape=box, label="bakiye = bakiye - tutar\ngunluk_cekilen = gunluk_cekilen + tutar"];
+    success [shape=parallelogram, label="Paranızı alınız\nYeni bakiye göster"];
+    
+    another [shape=diamond, label="Başka işlem yapmak istiyor musunuz?"];
+    
+    // Bakiye sorgulama ve çıkış
+    show_balance [shape=parallelogram, label="Bakiye ve günlük çekilen miktar göster"];
+    exit [shape=ellipse, label="Kartı alınız\nBİTİR"];
+
+    // --- Akış bağlantıları ---
+    start -> init -> pin_prompt;
+    pin_prompt -> check_pin;
+
+    // PIN kontrolü
+    check_pin -> pin_ok [label="Evet"];
+    check_pin -> wrong_pin [label="Hayır"];
+    
+    wrong_pin -> check_hak;
+    check_hak -> pin_prompt [label="Evet"];
+    check_hak -> blocked [label="Hayır"];
+
+    // Menü akışı
+    pin_ok -> menu;
+    menu -> choice;
+    choice -> enter_amount [label="1: Para Çek"];
+    choice -> show_balance [label="2: Bakiye Gör"];
+    choice -> exit [label="3: Çıkış"];
+    
+    // Para çekme akışı
+    enter_amount -> check_positive;
+    check_positive -> invalid_amount [label="Hayır"];
+    invalid_amount -> another;
+    
+    check_positive -> check_multiple [label="Evet"];
+    check_multiple -> invalid_multiple [label="Hayır"];
+    invalid_multiple -> another;
+    
+    check_multiple -> check_limit [label="Evet"];
+    check_limit -> limit_exceeded [label="Evet"];
+    limit_exceeded -> another;
+    
+    check_limit -> check_balance [label="Hayır"];
+    check_balance -> insufficient [label="Hayır"];
+    insufficient -> another;
+    
+    check_balance -> confirm [label="Evet"];
+    confirm -> withdraw [label="Evet"];
+    confirm -> another [label="Hayır"];
+    
+    withdraw -> success -> another;
+    
+    // Tekrar işlemi
+    another -> menu [label="Evet"];
+    another -> exit [label="Hayır"];
+    
+    // Bakiye sorgulama
+    show_balance -> another;
+}
