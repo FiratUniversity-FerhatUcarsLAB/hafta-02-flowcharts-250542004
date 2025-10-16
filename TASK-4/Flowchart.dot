@@ -1,0 +1,54 @@
+digraph DersKayit {
+    rankdir=TB;
+    node [shape=box];
+
+    Basla -> Giris;
+
+    node [shape=diamond];
+    Giris [label="Giriş başarılı mı?"];
+    Giris -> DersListesi [label="Evet"];
+    Giris -> GirisHata [label="Hayır"];
+    
+    node [shape=box];
+    GirisHata [label="Uyarı: Giriş başarısız"];
+    
+    DersListesi [label="Ders listesini göster ve seçim yap"];
+    
+    node [shape=diamond];
+    Kontenjan [label="Kontenjan dolu mu?"];
+    OnKosul [label="Ön koşullar tamam mı?"];
+    Zaman [label="Zaman çakışması var mı?"];
+    Kredi [label="Kredi limiti aşılıyor mu?"];
+    GPA [label="GPA < 2.5 mi?"];
+    Danisman [label="Danışman onayı verildi mi?"];
+    Onay [label="Kayıt onaylıyor musunuz?"];
+
+    DersListesi -> Kontenjan;
+    Kontenjan -> UyarıKontenjan [label="Evet"];
+    Kontenjan -> OnKosul [label="Hayır"];
+    OnKosul -> UyarıOnKosul [label="Hayır"];
+    OnKosul -> Zaman [label="Evet"];
+    Zaman -> UyarıZaman [label="Evet"];
+    Zaman -> Kredi [label="Hayır"];
+    Kredi -> UyarıKredi [label="Evet"];
+    Kredi -> GPA [label="Hayır"];
+    GPA -> Danisman [label="Evet"];
+    GPA -> DersEkle [label="Hayır"];
+    Danisman -> UyarıDanisman [label="Hayır"];
+    Danisman -> DersEkle [label="Evet"];
+    
+    DersEkle [shape=box,label="Dersi ekle ve kredi güncelle"];
+    
+    DersEkle -> Onay;
+    Onay -> KayitOnay [label="Evet"];
+    Onay -> KayitIptal [label="Hayır"];
+    
+    KayitOnay [shape=box,label="Kayıt onaylandı"];
+    KayitIptal [shape=box,label="Kayıt iptal edildi"];
+    
+    UyarıKontenjan [shape=box,label="Uyarı: Kontenjan dolu"];
+    UyarıOnKosul [shape=box,label="Uyarı: Ön koşul tamam değil"];
+    UyarıZaman [shape=box,label="Uyarı: Zaman çakışması"];
+    UyarıKredi [shape=box,label="Uyarı: Kredi limiti aşıyor"];
+    UyarıDanisman [shape=box,label="Uyarı: Danışman onayı gerekli"];
+}
