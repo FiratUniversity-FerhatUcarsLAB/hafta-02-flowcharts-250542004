@@ -1,0 +1,72 @@
+digraph HastaneSistemi {
+    rankdir=TB;
+    node [shape=box, style=rounded, fontname="Arial"];
+
+    // Ana Menü
+    AnaMenu [label="ANA MENÜ\n1. Randevu\n2. Tahlil Sonucu\n3. Çıkış", shape=box3d];
+
+    // =========================
+    // Randevu Sistemi Subgraph
+    // =========================
+    subgraph cluster_randevu {
+        label="Randevu Sistemi";
+        style=dashed;
+        node [shape=box];
+
+        R_Kimlik [label="Kimlik Doğrulama"];
+        R_KimlikKontrol [label="Kimlik Doğru mu?", shape=diamond];
+        R_Poliklinik [label="Poliklinik Seçimi"];
+        R_Doktor [label="Doktor Listesi Görüntüleme"];
+        R_Saat [label="Uygun Saatleri Göster"];
+        R_Onay [label="Randevu Onaylama", shape=diamond];
+        R_Kaydet [label="Randevu Kaydet ve SMS Gönder"];
+        R_Iptal [label="Randevu İptal Edildi"];
+
+        AnaMenu -> R_Kimlik [label="Seçim=1"];
+        R_Kimlik -> R_KimlikKontrol;
+        R_KimlikKontrol -> AnaMenu [label="Hayır"];
+        R_KimlikKontrol -> R_Poliklinik [label="Evet"];
+        R_Poliklinik -> R_Doktor;
+        R_Doktor -> R_Saat;
+        R_Saat -> R_Onay;
+        R_Onay -> R_Kaydet [label="Evet"];
+        R_Onay -> R_Iptal [label="Hayır"];
+        R_Kaydet -> AnaMenu;
+        R_Iptal -> AnaMenu;
+    }
+
+    // =========================
+    // Tahlil Sistemi Subgraph
+    // =========================
+    subgraph cluster_tahlil {
+        label="Tahlil Sonucu Görüntüleme";
+        style=dashed;
+        node [shape=box];
+
+        T_Kimlik [label="Kimlik Doğrulama"];
+        T_KimlikKontrol [label="Kimlik Doğru mu?", shape=diamond];
+        T_Varlik [label="Tahlil Var mı?", shape=diamond];
+        T_Hazir [label="Sonuç Hazır mı?", shape=diamond];
+        T_Goruntule [label="Sonucu Görüntüle"];
+        T_PDF [label="PDF İndir?", shape=diamond];
+        T_PDFIndir [label="PDF İndirildi"];
+        T_Bekle [label="Bekleyin / Ana Menüye Dön"];
+
+        AnaMenu -> T_Kimlik [label="Seçim=2"];
+        T_Kimlik -> T_KimlikKontrol;
+        T_KimlikKontrol -> AnaMenu [label="Hayır"];
+        T_KimlikKontrol -> T_Varlik [label="Evet"];
+        T_Varlik -> T_Bekle [label="Hayır"];
+        T_Varlik -> T_Hazir [label="Evet"];
+        T_Hazir -> T_Bekle [label="Hayır"];
+        T_Hazir -> T_Goruntule [label="Evet"];
+        T_Goruntule -> T_PDF;
+        T_PDF -> T_PDFIndir [label="Evet"];
+        T_PDF -> AnaMenu [label="Hayır"];
+        T_PDFIndir -> AnaMenu;
+    }
+
+    // Çıkış
+    AnaMenu -> Cikis [label="Seçim=3"];
+    Cikis [label="Sistemden Çıkış", shape=box3d];
+}
