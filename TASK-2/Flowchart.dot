@@ -1,0 +1,69 @@
+digraph ETicaret {
+    rankdir=TB;
+    node [shape=box, style=rounded];
+
+    BASLA [label="BASLA"];
+
+    # Kullanıcı Girişi
+    GIRIS [label="Kullanıcı girişi\n(Kullanıcı adı ve şifre al)"];
+    GIRIS_KONTROL [shape=diamond, label="Bilgiler doğru mu?"];
+    GIRIS_HATA [label="Hata: Kullanıcı adı veya şifre hatalı"];
+    GIRIS_BASARILI [label="Giriş başarılı"];
+
+    # Sepet Yönetimi
+    URUN_LISTE [label="Ürünleri listele"];
+    SECIM [label="Ürün seçimi (0 = çıkış)"];
+    STOK_KONTROL [shape=diamond, label="Stok yeterli mi?"];
+    URUN_EKLE [label="Ürünü sepete ekle"];
+    STOK_YETERSIZ [label="Stok yetersiz"];
+
+    # İndirim Kodu
+    INDIRIM [label="İndirim kodu al"];
+    INDIRIM_KONTROL [shape=diamond, label="Kod geçerli mi?"];
+    INDIRIM_UYGULA [label="İndirimi uygula"];
+    INDIRIM_HATA [label="Geçersiz kod"];
+
+    # Kargo Hesaplama
+    KARGO_SECIM [label="Kargo seçimi al"];
+    KARGO_HESAP [label="Kargo ücreti hesapla ve toplam fiyata ekle"];
+
+    # Ödeme İşlemleri
+    ODEME_BILGI [label="Ödeme bilgilerini al"];
+    ODEME_KONTROL [shape=diamond, label="Ödeme geçerli mi?"];
+    ODEME_BASARILI [label="Ödeme başarılı\nStokları güncelle"];
+    ODEME_HATA [label="Ödeme başarısız"];
+
+    BITIR [label="BITIR"];
+
+    # Bağlantılar
+    BASLA -> GIRIS;
+    GIRIS -> GIRIS_KONTROL;
+    GIRIS_KONTROL -> GIRIS_BASARILI [label="EVET"];
+    GIRIS_KONTROL -> GIRIS_HATA [label="HAYIR"];
+    GIRIS_HATA -> GIRIS;
+
+    GIRIS_BASARILI -> URUN_LISTE;
+    URUN_LISTE -> SECIM;
+    SECIM -> STOK_KONTROL [label="0 değil"];
+    SECIM -> ODEME_BILGI [label="0 (çıkış)"];
+    STOK_KONTROL -> URUN_EKLE [label="EVET"];
+    STOK_KONTROL -> STOK_YETERSIZ [label="HAYIR"];
+    URUN_EKLE -> URUN_LISTE;
+    STOK_YETERSIZ -> URUN_LISTE;
+
+    ODEME_BILGI -> ODEME_KONTROL;
+    ODEME_KONTROL -> ODEME_BASARILI [label="EVET"];
+    ODEME_KONTROL -> ODEME_HATA [label="HAYIR"];
+    ODEME_BASARILI -> BITIR;
+    ODEME_HATA -> ODEME_BILGI;
+
+    # İndirim ve Kargo
+    URUN_LISTE -> INDIRIM;
+    INDIRIM -> INDIRIM_KONTROL;
+    INDIRIM_KONTROL -> INDIRIM_UYGULA [label="EVET"];
+    INDIRIM_KONTROL -> INDIRIM_HATA [label="HAYIR"];
+    INDIRIM_UYGULA -> KARGO_SECIM;
+    INDIRIM_HATA -> KARGO_SECIM;
+    KARGO_SECIM -> KARGO_HESAP;
+    KARGO_HESAP -> ODEME_BILGI;
+}
