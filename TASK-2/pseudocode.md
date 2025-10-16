@@ -3,7 +3,7 @@ Online Alışveriş Sepet Sistemi-Devamı için LLM tarafından hazırlanan pseu
 
 BASLA
 
-# 1. Kullanıcı Girişi
+// 1. Kullanıcı Girişi
 KULLANICI_GIRISI:
     KULLANICI_ADI ← input("Kullanıcı adını girin: ")
     SIFRE ← input("Şifreyi girin: ")
@@ -13,7 +13,7 @@ KULLANICI_GIRISI:
         göster "Kullanıcı adı veya şifre hatalı"
         TEKRAR KULLANICI_GIRISI
 
-# 2. Ürün Listeleme ve Sepete Ekleme
+// 2. Ürün Listeleme ve Sepete Ekleme
 SEPET_YONETIMI:
     DONGU
         URUN_LISTESI ← veritabanından tüm ürünleri al
@@ -30,7 +30,7 @@ SEPET_YONETIMI:
             göster "Stok yetersiz"
     DONGU BITIR
 
-# 3. İndirim Kodu Uygulama
+// 3. İndirim Kodu Uygulama
 INDIRIM_KODU:
     KOD ← input("İndirim kodu girin veya boş bırakın: ")
     EGER KOD ≠ "" ISE
@@ -40,7 +40,7 @@ INDIRIM_KODU:
         DEĞILSE ISE
             göster "Geçersiz indirim kodu"
 
-# 4. Kargo Hesaplama
+// 4. Kargo Hesaplama
 KARGO_HESAP:
     KARGO_SECIM ← input("Kargo seçiminizi yapın: standart/express")
     TOPLAM_AGIRLIK ← 0
@@ -51,7 +51,7 @@ KARGO_HESAP:
     sepet.toplam_fiyat ← sepet.toplam_fiyat + KARGO_UCRETI
     göster "Kargo ücreti eklendi: ", KARGO_UCRETI
 
-# 5. Ödeme İşlemleri
+// 5. Ödeme İşlemleri
 ODEME:
     ODENECEK_TUTAR ← sepet.toplam_fiyat
     KART_NO ← input("Kart numarasını girin: ")
