@@ -1,0 +1,64 @@
+digraph AkilliEvGuvenlik {
+    rankdir=TB; // Yukarıdan aşağıya
+    node [fontname="Arial"];
+
+    // Başlat
+    Basla [shape=oval, label="BASLA\nSistem Başlatıldı\nSISTEM_AKTIF = TRUE"];
+
+    // Sensör Okuma
+    SensorKontrol [shape=box, label="Sensörleri Oku:\n- Hareket\n- Kapı/Pencere\n- Evdeki Kimse"];
+
+    // Kamera Aktivasyonu Kararı
+    KameraDecision [shape=diamond, label="Hareket veya Kapı/Pencere Açıldı mı?"];
+    KameraProcess [shape=box, label="Kamerayı Aktif Et"];
+
+    // Yanlış Alarm Kararı
+    YanlisAlarmDecision [shape=diamond, label="Ev sahibi evde mi?"];
+    YanlisAlarmProcess [shape=box, label="Alarmı Durdur"];
+    
+    // Alarm Seviyesi Belirleme
+    AlarmSeviyesiDecision [shape=diamond, label="Hareket + Kapı/Pencere?"];
+    AlarmSeviyesiYuksek [shape=box, label="Alarm Seviyesi = 3 (Yüksek)"];
+    AlarmSeviyesiOrta [shape=box, label="Alarm Seviyesi = 2 (Orta)"];
+    AlarmSeviyesiDusuk [shape=box, label="Alarm Seviyesi = 1 (Düşük)"];
+
+    // Bildirim Gönderme Kararı
+    BildirimDecision [shape=diamond, label="Alarm Seviyesi > 1 ve ALARM_DUR = FALSE?"];
+    BildirimProcess [shape=box, label="Bildirim Gönder:\n- SMS\n- Email\n- App"];
+
+    // Alarm Sıfırlama Kararı
+    AlarmSifirlaDecision [shape=diamond, label="Kullanıcı Sıfırla Komutu Verdi mi?"];
+    AlarmSifirlaProcess [shape=box, label="Alarmı Sıfırla"];
+
+    // Bekleme ve Sonsuz Döngü
+    Bekle [shape=box, label="Bekle 5 saniye\nSensörleri Güncelle"];
+   
+    // Oklar ve bağlantılar
+    Basla -> SensorKontrol;
+
+    SensorKontrol -> KameraDecision;
+    KameraDecision -> KameraProcess [label="EVET"];
+    KameraDecision -> YanlisAlarmDecision [label="HAYIR"];
+    KameraProcess -> YanlisAlarmDecision;
+
+    YanlisAlarmDecision -> YanlisAlarmProcess [label="EVET"];
+    YanlisAlarmDecision -> AlarmSeviyesiDecision [label="HAYIR"];
+    YanlisAlarmProcess -> Bekle;
+
+    AlarmSeviyesiDecision -> AlarmSeviyesiYuksek [label="EVET"];
+    AlarmSeviyesiDecision -> AlarmSeviyesiOrta [label="HAYIR"];
+    AlarmSeviyesiOrta -> AlarmSeviyesiDusuk [label="Sadece 1 sensör"];
+    AlarmSeviyesiYuksek -> BildirimDecision;
+    AlarmSeviyesiOrta -> BildirimDecision;
+    AlarmSeviyesiDusuk -> Bekle;
+
+    BildirimDecision -> BildirimProcess [label="EVET"];
+    BildirimDecision -> AlarmSifirlaDecision [label="HAYIR"];
+    BildirimProcess -> AlarmSifirlaDecision;
+
+    AlarmSifirlaDecision -> AlarmSifirlaProcess [label="EVET"];
+    AlarmSifirlaDecision -> Bekle [label="HAYIR"];
+    AlarmSifirlaProcess -> Bekle;
+
+    Bekle -> SensorKontrol [label="Sürekli Döngü" color=blue fontcolor=blue];
+}
