@@ -1,6 +1,9 @@
 Universite Ders Kayıt Sistemi için LLM ile beraber hazırlanılan psuedocode aşağıdadır:
 
 
+# Üniversite Ders Kayıt Sistemi - Pseudocode
+
+```text
 Başla
     Öğrenci girişi (öğrenci no + şifre)
     Eğer giriş başarılı ise
