@@ -1,6 +1,9 @@
 Hastane Randevu ve Tahlil Sistemi için LLM ile beraber hazırlanılan pseudocode aşağıdadır:
 
 
+# Hastane Sistemi Pseudocode
+
+```plaintext
 ALGORITMA HastaneSistemi
 
 BASLA
@@ -119,3 +122,4 @@ BASLA
             YAZ "Geçersiz seçim! Lütfen tekrar deneyiniz."
     TEKRARLA
 SON
+
